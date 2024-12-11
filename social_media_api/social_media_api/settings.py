@@ -40,8 +40,18 @@ INSTALLED_APPS = [
     "rest_framework",
     "accounts",
     "django_extensions",
+    "rest_framework_simplejwt",
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # For Token Authentication
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',  # For JWT Authentication
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Ensures that users must be authenticated to access the API
+    ],
+}
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

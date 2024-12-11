@@ -4,9 +4,14 @@ from rest_framework.response import Response
 from .models import Profile
 from django.contrib.auth.models import User
 from .serializers import ProfileSerializer
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 
 @api_view(['GET', 'POST'])
 def profile_list(request):
+    # Ensure the user is authenticated
+    if request.user.is_authenticated:
     if request.method == 'GET':
         profiles = Profile.objects.all()
         serializer = ProfileSerializer(profiles, many=True)
@@ -31,6 +36,8 @@ def profile_detail(request, pk):
     except Profile.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # Ensure the user is authenticated
+    if request.user.is_authenticated:
     if request.method == 'GET':
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
@@ -46,3 +53,36 @@ def profile_detail(request, pk):
         profile.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# Authentication views (Newly added views)
+
+class RegisterView(APIView):
+    def post(self, request):
+        # Register a new user
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        # Check if the user already exists
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'User already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create a new user
+        user = User.objects.create_user(username=username, password=password)
+        return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+
+class LoginView(APIView):
+    def post(self, request):
+        # Login and return JWT tokens
+        username = request.data.get('username')
+        password = request.data.get('password')
+        
+        # Check if the user exists and validate the password
+        user = User.objects.filter(username=username).first()
+        if not user or not user.check_password(password):
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create JWT tokens
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        })
