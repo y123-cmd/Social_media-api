@@ -46,3 +46,30 @@ Run the migrations to set up the initial database structure:
 bash
 Copy code
 python manage.py migrate
+
+
+# Profile API Endpoints
+
+## Get Profile
+
+Here is an example of a GET request to retrieve a profile:
+
+![GET Profile Screenshot](screenshots/Screenshot\ from\ 2024-12-11\ 11-07-32.png)
+
+## Create Profile
+
+Here is an example of a POST request to create a profile:
+
+![POST Profile Screenshot](screenshots/Screenshot\ from\ 2024-12-11\ 11-23-44.png)
+
+## Update Profile
+
+Here is an example of a PUT request to update a profile:
+
+![PUT Profile Screenshot](screenshots/Screenshot\ from\ 2024-12-11\ 11-41-16.png)
+
+## Delete Profile
+
+Here is an example of a DELETE request to delete a profile:
+
+![DELETE Profile Screenshot](screenshots/Screenshot\ from\ 2024-12-11\ 11-46-22.png)
